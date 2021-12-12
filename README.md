@@ -9,3 +9,8 @@ I previously had a raspberry pi to do this, but this was both slow (seconds to p
 ## Status
 
 This is not high-quality code, this was developed with haste in mind, not quality; use at your own risk.
+
+## Hardware
+
+* [NUCLEO-H743ZI](https://www.st.com/en/evaluation-tools/nucleo-h743zi.html)
+* [HDMI Plug Breakout Board](https://www.adafruit.com/product/3119)

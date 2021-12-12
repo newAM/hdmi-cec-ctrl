@@ -4,7 +4,8 @@
 
 mod logger;
 
-use core::sync::atomic::{AtomicU32, Ordering};
+use atomic_polyfill::AtomicI64;
+use core::sync::atomic::Ordering;
 use log::LevelFilter;
 use logger::Logger;
 use newam_mqtt::v3::{
@@ -78,10 +79,6 @@ pub const SUBSCRIBE: [u8; SUBSCRIBE_LEN] = [
     0b00000000,
 ];
 
-const TIMER_HZ: u32 = 2;
-
-/// Configure SYSTICK for 0.5s timebase
-/// 68 years before overflowing a u32 atomic
 fn systick_init(mut syst: pac::SYST, clocks: CoreClocks) {
     let reload: u32 = (clocks.c_ck().0 + TIMER_HZ / 2) / TIMER_HZ - 1;
 
@@ -92,11 +89,12 @@ fn systick_init(mut syst: pac::SYST, clocks: CoreClocks) {
     syst.enable_counter();
 }
 
-static TIME: AtomicU32 = AtomicU32::new(0);
+static TIME: AtomicI64 = AtomicI64::new(0);
+const TIMER_HZ: u32 = 1000;
 
 #[inline]
-fn now() -> Instant {
-    const MUL: u32 = 1000 / TIMER_HZ;
+pub fn now() -> Instant {
+    const MUL: i64 = 1000 / (TIMER_HZ as i64);
     Instant::from_millis(TIME.load(Ordering::Relaxed) * MUL)
 }
 

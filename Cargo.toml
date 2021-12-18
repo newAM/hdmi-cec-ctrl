@@ -20,8 +20,8 @@ git = "https://github.com/newAM/newam-mqtt.git"
 rev = "9b2dfef39713bd39688bb91940839a3c84e5ab0d"
 
 [dependencies.stm32h7xx-hal]
-git = "https://github.com/newAM/stm32h7xx-hal.git"
-rev = "d4027e26ccead4458cf7d18e8651f5bc527c45d9"
+git = "https://github.com/stm32-rs/stm32h7xx-hal.git"
+rev = "bba94e7b572df5858d453031347f51fdea7c2d86"
 features = ["stm32h743", "rt", "ethernet"]
 
 [dependencies.stm32-cec]

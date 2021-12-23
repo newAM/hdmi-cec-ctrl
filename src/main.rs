@@ -337,13 +337,12 @@ mod app {
         let mqtt_timeout: &mut Instant = ctx.local.mqtt_timeout;
         let next_attempt: &mut Instant = ctx.local.next_attempt;
 
-        (ctx.shared.iface).lock(|iface| {
+        (ctx.shared.iface).lock(|iface| loop {
             let timestamp: Instant = now();
-
             match iface.poll(timestamp) {
                 Err(e) => log::error!("iface poll: {}", e),
-                #[allow(unused_variables)]
-                Ok(readiness_may_have_changed) => (),
+                Ok(false) => return,
+                Ok(true) => (),
             }
 
             match iface.get_socket::<Dhcpv4Socket>(*ctx.shared.dhcp).poll() {

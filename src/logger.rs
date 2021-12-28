@@ -17,7 +17,7 @@ impl log::Log for Logger {
 
     fn log(&self, record: &Record) {
         if self.enabled(record.metadata()) {
-            rtt_target::rprintln!("[{}] [{}] {}", super::now(), record.level(), record.args());
+            rtt_target::rprintln!("[{}] {}", record.level(), record.args());
         }
     }
 

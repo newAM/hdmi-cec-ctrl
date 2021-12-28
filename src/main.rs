@@ -1,28 +1,25 @@
 #![no_std]
 #![no_main]
-#![allow(unused_imports)]
 
 mod logger;
 
-use core::sync::atomic::Ordering;
 use log::LevelFilter;
 use logger::Logger;
 use panic_probe as _; // panic handler
 use rtt_target::rtt_init_print;
 use stm32_cec::Cec;
 use stm32h7xx_hal::{
-    gpio::{gpiob::PB0, Output, PushPull, Speed},
-    hal::digital::v2::OutputPin,
+    gpio::{GpioExt, Speed},
     pac,
-    prelude::*,
+    pwr::PwrExt,
     rcc::{
         rec::{CecClkSel, UsbClkSel},
-        CoreClocks, ResetEnable,
+        RccExt, ResetEnable,
     },
-    usb_hs::{UsbBus, USB1, USB2},
+    time::U32Ext,
+    usb_hs::{UsbBus, USB2},
 };
-use usb_device::device::{UsbDevice, UsbDeviceBuilder, UsbVidPid};
-use usbd_serial::SerialPort;
+use usb_device::device::{UsbDeviceBuilder, UsbVidPid};
 
 static LOGGER: Logger = Logger::new(LevelFilter::Trace);
 
@@ -85,7 +82,7 @@ fn main() -> ! {
         gpioa.pa12.into_alternate_af10(),
     );
 
-    let usb = USB2::new(
+    let usb: USB2 = USB2::new(
         dp.OTG2_HS_GLOBAL,
         dp.OTG2_HS_DEVICE,
         dp.OTG2_HS_PWRCLK,
